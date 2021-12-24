@@ -1,0 +1,166 @@
+
+#include <iostream>
+
+using namespace std;
+
+struct Node {
+    int value;
+    Node* next;
+};
+
+struct List {
+    Node* start;
+    Node* finish;
+    int size;
+};
+
+List MakeList() {
+    List list{};
+    list.start = nullptr;
+    list.finish = nullptr;
+    list.size = 0;
+    return list;
+}
+
+int Size(const List& list) {
+    return list.size;
+}
+
+void Swap(List& list_1, List& list_2) {
+    Node* temp_start = list_1.start;
+    Node* temp_finish = list_1.finish;
+    int temp_size = list_1.size;
+
+    list_1.start = list_2.start;
+    list_1.finish = list_2.finish;
+    list_1.size = list_2.size;
+
+    list_2.start = temp_start;
+    list_2.finish = temp_finish;
+    list_2.size = temp_size;
+}
+
+
+void AppendNode(List& list, const int& newValue) {
+
+    Node* newNode = new Node;
+    newNode->value = newValue;
+    newNode->next = nullptr;
+
+    if (list.size == 0) {
+        list.start = newNode;
+        list.finish = newNode;
+    }
+    else if (list.size >= 1) {
+        list.finish->next = newNode;
+        list.finish = newNode;
+    }
+
+    list.size = list.size + 1;
+}
+
+
+Node* MakeListNode(List& list, const int& value) {
+    AppendNode(list, value);
+    return list.finish;
+}
+
+
+void AppendList(List& list, List& secondList) {
+    if (secondList.size >= 1) {
+        list.finish->next = secondList.start;
+        list.finish = secondList.finish;
+        list.size = list.size + secondList.size;
+
+        secondList.finish = nullptr;
+        secondList.start = nullptr;
+        secondList.size = 0;
+    }
+}
+
+
+void PopNode(List& list) {
+    if (list.size == 1) {
+        delete list.start;
+        list.start = nullptr;
+        list.finish = nullptr;
+    }
+
+    else if (list.size > 1) {
+        Node* newStart = list.start->next;
+        list.start->next = nullptr;
+        delete list.start;
+        list.start = newStart;
+    }
+
+    list.size = list.size - 1;
+}
+
+
+void Clear(List& list) {
+    while (list.size >= 1) {
+        PopNode(list);
+    }
+}
+
+
+void Copy(List& list, const List& copiedList) {
+
+    if (copiedList.size >= 1) {
+        Clear(list);
+        Node* temp = copiedList.start;
+        while (temp != nullptr) {
+            AppendNode(list, temp->value);
+            temp = temp->next;
+        }
+    }
+}
+
+List Clone(const List& copiedList) {
+    List newList = MakeList();
+    Copy(newList, copiedList);
+    return newList;
+}
+
+void PrintList(const List& list) {
+    if (list.size >= 1) {
+        Node* temp = list.start;
+        while (temp != nullptr) {
+            cout << temp->value << endl;
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+}
+
+void Demonstration() {
+    List list = MakeList();
+    for (int i = 0; i < 4; i = i + 1) {
+        AppendNode(list, i);
+    }
+    PrintList(list);
+
+    List list_2 = MakeList();
+
+    for (int i = 5; i < 11; ++i) {
+        AppendNode(list_2, i);
+    }
+    PrintList(list_2);
+
+    List list_3 = Clone(list);
+    PrintList(list_3);
+
+    Swap(list, list_2);
+    PrintList(list);
+    PrintList(list_2);
+
+    Clear(list);
+    Clear(list_2);
+    Clear(list_3);
+}
+
+int main() {
+
+    Demonstration();
+    return 0;
+}
