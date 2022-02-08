@@ -67,7 +67,7 @@ def check_win(a,st):
         
         print('You lose!!')  
         return False
-    elif w1==-1800 or w2==-1800 or w3==-1800 or w4==-1800:
+    elif w1==-1800 or w2==-3600 or w3==-5400 or w4==-7200:
      
         print('You win!!')
         return False
