@@ -1,0 +1,155 @@
+def display_board(board_list,position,stri):
+    
+    board_list[position]=stri
+    for i in range(0,100,10) :
+        print("%2s" %board_list[i] + ' | ' + "%2s" %board_list[i+1] + ' | ' + "%2s" %board_list[i+2]+ ' | ' + "%2s" %board_list[i+3] + ' | ' + "%2s" %board_list[i+4]+' | '+"%2s" %board_list[i+5] + ' | ' + "%2s" %board_list[i+6] + ' | ' + "%2s" %board_list[i+7]+ ' | ' + "%2s" %board_list[i+8] + ' | ' + "%2s" %board_list[i+9])
+        print("%2s" %'---|----|----|----|----|----|----|----|----|---')
+    
+
+def player_input():
+    
+    player_human = ""
+    while player_human not in ('X', 'O'):
+        player_human = input('Вы хотите играть за X или O? ').upper()
+
+    if player_human == 'X':
+        player_second = 'O'
+    else:
+        player_second = 'X'
+
+    return player_human, player_second
+
+def void_board(list_):
+    t=0
+    for i in range(100):
+        if (list_[i]=='X') or (list_[i]=='O'):
+            t+=1
+    if t==100:
+        return False
+    else:
+        return True
+def check_win(a,st):
+    w1=w2=w3=w4=0
+    for i in range (9):
+        for j in range (9):
+            if a[i][j]==a[i][j+1]:
+                w1+=a[i][j]
+           
+                
+        if a[i][i]==a[i+1][i+1]:
+            w3+=a[i][i]
+      
+      
+            
+    for j in range (9):
+        for i in range (9):
+            if a[i][j]==a[i+1][j]:
+                w2+=a[i][j]
+    j=9
+    i=0
+    for k in range (9):
+        if i+j==9 and a[i][j]==a[i+1][j-1]:
+            w4+=a[i][j]
+            j-=1
+            i+=1
+    
+    if w1==1800 or w2==1800 or w3==1800 or w4==1800:  
+        
+        print('You lose!!')  
+        return False
+    elif w1==-1800 or w2==-1800 or w3==-1800 or w4==-1800:
+     
+        print('You win!!')
+        return False
+    else:
+        return True
+
+import random
+
+def human_move(matr,list_,stri):
+    print('Your turn: ')
+    inp=int(input())
+    inp-=1
+
+    while list_[inp]=='X' or list_[inp]=='O':
+        print('Please, enter another number: ')
+        inp=int(input())
+        inp-=1
+    list_[inp]=stri
+    print('list_[',inp,']= ',list_[inp])
+    i=inp//10
+    j=inp-10*i
+    matr[i][j]=200
+    display_board(list_,inp,stri)
+
+
+def computer_move(matr,list_,stri,stri_):
+    inp=list_[random.randint(1,len(list_)-1)]
+    while inp=='X' or inp=='O':
+        inp=list_[random.randint(1,len(list_)-1)]
+    print('computer move: ', inp)
+    inp-=1
+    i=inp//10
+    j=inp-10*i
+    list_[inp]=stri
+
+    matr[i][j]=-200
+
+
+    display_board(list_,inp,stri)
+
+
+
+
+
+player_human=player_input()[0]
+
+matr=[]
+for i in range (10):
+    matr.append([0]*10)
+
+a=1
+for i in range (10):
+    for j in range(10):
+        matr[i][j]=a
+        a+=1
+
+
+
+list_=[]
+for j in range (1,101):
+    list_.append(j)
+    
+if player_human=='X':
+    st='X'
+else:
+    st='O'
+
+display_board(list_,0,1)
+while check_win(matr,st)==True and void_board(list_)==True:
+    if player_human=='X':
+        human_move(matr,list_,'X')
+        computer_move(matr,list_,'O','X')
+    else:
+        computer_move(matr,list_,'X','O')
+        human_move(matr,list_,'O')
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
